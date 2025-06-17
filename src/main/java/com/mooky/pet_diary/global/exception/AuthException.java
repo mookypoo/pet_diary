@@ -11,8 +11,8 @@ package com.mooky.pet_diary.global.exception;
  */
 public class AuthException extends ApiException {
 
-    private AuthException(String errorMessage, String errorCode, String errorValue, String errorTitle) {
-        super("auth_exception", errorMessage, errorCode, errorValue, errorTitle, 404);
+    private AuthException(String error, String errorMessage, String errorCode, String errorValue, String errorTitle) {
+        super(error, errorMessage, errorCode, errorValue, errorTitle, 404);
     }
 
     /**
@@ -22,27 +22,28 @@ public class AuthException extends ApiException {
     public static AuthException invalidCredentials(String errorValue, String errorMessage) {
         String errorMsg = errorMessage != null ? errorMessage : "you are not authorized to access this content";
         return new AuthException(
+                "invalid_credentials",
                 errorMsg,
                 "AUTH_001",
                 errorValue,
-                "invalid_credentials");
+                null);
     }
     
     public static AuthException invalidLogin(String errorMessage, String errorValue, String errorTitle) {
-        return new AuthException(errorMessage, "AUTH_002", errorValue, errorTitle);
+        return new AuthException("auth_exception", errorMessage, "AUTH_002", errorValue, errorTitle);
     }
 
     public static AuthException missingJwtToken() {
-        return new AuthException("missing jwt token", "AUTH_003", null, "jwt_token_error");
+        return new AuthException("missing_access_token", "missing jwt token", "AUTH_003", null, "jwt_token_error");
     }
 
-    public static AuthException invalidJwtToken(String accessToken, String errorMessage) {
-        return new AuthException(errorMessage, "AUTH_004", accessToken,
+    public static AuthException invalidJwtToken(String errorMessage) {
+        return new AuthException("invalid_access_token", errorMessage, "AUTH_004", null,
                 "jwt_token_error");
     }
 
-    public static AuthException expiredJwtToken(String accessToken) {
-        return new AuthException("expired jwt token, please send refresh token to server", "AUTH_005", accessToken,
+    public static AuthException expiredJwtToken() {
+        return new AuthException("expired_jwt_token", "please send refresh token to server", "AUTH_005", null,
                 "jwt_token_error");
     }
     

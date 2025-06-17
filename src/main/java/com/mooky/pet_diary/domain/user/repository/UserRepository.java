@@ -28,12 +28,12 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("UPDATE User u SET u.recentLoginAt = CURRENT_TIMESTAMP WHERE u.id = :userId")
     int updateRecentLoginById(@Param("userId") Long userId);
 
-    @Query(nativeQuery = true, value = """
-            SELECT u.user_id as userId, u.username, u.email,
-                   p.pet_id as petId, p.name as petName, p.profile_photo as petProfilePhoto
-            FROM usr u
-            LEFT JOIN pet p ON u.user_id = p.owner_id
-            WHERE u.user_id = :userId
+    @Query("""
+            SELECT u.id as userId, u.username as username, u.email as email,
+                    p.id as petId, p.name as petName, p.profilePhoto as petProfilePhoto
+            FROM User u
+            JOIN FETCH Pet p ON u.id = p.ownerId
+            WHERE u.id=:userId
             """)
     List<UserWithPetSummaryProjection> findUserProfileWithPetsSummaryById(@Param("userId") Long userId);
 }

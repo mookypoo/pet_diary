@@ -1,13 +1,11 @@
 package com.mooky.pet_diary.domain.health_entry.dto;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+public interface PetHealthEntryForm {
+    Long getPetId();
 
-@RequiredArgsConstructor
-@Getter
-public class PetHealthEntryForm {
-    private final Long petId;
-    private final String petName;
-    private final Float weight;
-    private final String weightUnit;
+    String getPetName();
+    
+    Float getWeight();
+
+    String getWeightUnit();
 }

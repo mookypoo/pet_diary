@@ -2,14 +2,19 @@ package com.mooky.pet_diary.domain.pet;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
+import com.mooky.pet_diary.domain.health_entry.entity.HealthEntry;
 import com.mooky.pet_diary.domain.pet.dto.PetDto;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,6 +22,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+// TODO does getting Pet info get HealthEntries as well?
 @Entity
 @Table
 @Getter
@@ -50,6 +56,9 @@ public class Pet {
     private String weightUnit;
 
     private LocalDateTime modifiedAt;
+
+    @OneToMany(mappedBy = "pet", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<HealthEntry> healthEntries;
 
     public static Pet fromPetDto(PetDto petDto, Long ownerId) {
         return new PetBuilder()

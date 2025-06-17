@@ -12,6 +12,10 @@ public class NotFoundException extends ApiException {
         return new NotFoundException(error, errorMessage, errorValue, null);
     }
 
+    public static NotFoundException healthEntry(String errorMessage, String errorValue) {
+        return new NotFoundException("healthEntry_not_found", errorMessage, errorValue, null);
+    }
+
     public static NotFoundException matchingPetAndOwner(Long petId, Long userId) {
         return new NotFoundException(
             "pet_not_found", 

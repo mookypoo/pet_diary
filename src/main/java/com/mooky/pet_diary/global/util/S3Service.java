@@ -31,7 +31,6 @@ public class S3Service {
     @Value("${aws.s3.bucket-name}")
     private String bucketName;
 
-    // TODO arraylist or list.of
     private final List<String> allowedFileTypes = List.of(
         "image/jpeg", "image/jpg", "image/png", "image/webp");
 

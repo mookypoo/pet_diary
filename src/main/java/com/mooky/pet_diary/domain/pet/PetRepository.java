@@ -1,13 +1,10 @@
 package com.mooky.pet_diary.domain.pet;
 
-import java.util.Optional;
-
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import com.mooky.pet_diary.domain.health_entry.dto.PetHealthEntryForm;
 import com.mooky.pet_diary.domain.pet.dto.PetDto;
 
 public interface PetRepository extends JpaRepository<Pet, Long> {

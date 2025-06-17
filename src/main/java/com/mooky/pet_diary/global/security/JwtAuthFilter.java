@@ -54,7 +54,7 @@ public class JwtAuthFilter extends GenericFilterBean {
      * @see CurrentUser
      */
     private void authenticateUser(String token) {
-        Long userId = this.jwtService.getUserIdFromAccessToken(token);
+        Long userId = this.jwtService.getUserIdFromToken(token, true);
         if (userId != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userId,
                     null, Collections.emptyList());

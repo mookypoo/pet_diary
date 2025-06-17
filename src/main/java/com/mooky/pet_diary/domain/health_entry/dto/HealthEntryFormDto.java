@@ -11,4 +11,5 @@ public class HealthEntryFormDto {
 
     private final List<OptionDto> energyLevels;
     private final List<OptionDto> activityTypes;
+    
 }

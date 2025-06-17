@@ -33,14 +33,12 @@ public class AuthController {
     @PostMapping("/signup/email")
     public ApiResponse signUpByEmail(
             @Validated({ UserSignUpInfo.class, UserEmail.class, Password.class }) @RequestBody UserSignUpReq req) {
-        UserDto user = this.authService.signUpByEmail(req);
-        return ApiResponse.ok(user);
+        return ApiResponse.ok(this.authService.signUpByEmail(req));
     }
     
     @PostMapping("/signup/google")
     public ApiResponse signUpByGoogle(@Validated({ UserSignUpInfo.class, UserEmail.class, GoogleSignUpInfo.class }) @RequestBody UserSignUpReq req) {
-        UserDto user = this.authService.signUpByGoogle(req);
-        return ApiResponse.ok(user);
+        return ApiResponse.ok(this.authService.signUpByGoogle(req));
     }
 
     @PostMapping("/check/email")
@@ -59,8 +57,7 @@ public class AuthController {
     
     @PostMapping("/login/email") 
     public ApiResponse emailLogin(@Valid @RequestBody EmailLoginReq req) {
-        UserDto user = this.authService.emailLogin(req);
-        return ApiResponse.ok(user);
+        return ApiResponse.ok(this.authService.emailLogin(req));
     }
 
     @PostMapping("/login/google")
@@ -72,4 +69,9 @@ public class AuthController {
         return ApiResponse.ok(user);
     }
 
+    @PostMapping("/refresh-token")
+    public ApiResponse refreshAccessToken(@RequestBody Map<String, String> body) {
+        UserDto user = this.authService.refreshAccessToken(body.get("refreshToken"));
+        return ApiResponse.ok(user);
+    }
 }

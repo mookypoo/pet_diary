@@ -30,13 +30,13 @@ public class PetController {
     }
 
     @GetMapping("/{petId}")
-    public ApiResponse getPetDetails(@PathVariable Long petId, @CurrentUser Long currentUser) {
+    public ApiResponse getPetDetails(@PathVariable("petId") Long petId, @CurrentUser Long currentUser) {
         PetDto pet = this.petService.getPetDetails(petId, currentUser);
         return ApiResponse.ok(pet);
     }
 
     @PutMapping("/{petId}")
-    public ApiResponse updatePet(@PathVariable Long petId, @Validated(UpdatePet.class) @RequestBody PetDto petDto, @CurrentUser Long currentUser) {
+    public ApiResponse updatePet(@PathVariable("petId") Long petId, @Validated(UpdatePet.class) @RequestBody PetDto petDto, @CurrentUser Long currentUser) {
         PetDto pet = this.petService.updatePet(petId, petDto, currentUser);
         return ApiResponse.ok(pet);
     }

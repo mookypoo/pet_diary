@@ -26,8 +26,7 @@ create or replace table pet_diary.health_entry (
     entry_date      date            not null comment 'one entry per pet, per day',
     weight          decimal(5,2),
     weight_unit     enum('kg', 'lbs') default 'kg',
-    energy_level_value varchar(20)  comment 'eg) low, very_low',
-    energy_level_display varchar(25)  comment 'eg) Low, Very Low',
+    energy_level_id int             comment 'references energy_level table (but no FK constraint)',
     notes           text            comment 'user free-form diary entry',
     created_at      datetime        default current_timestamp(),
     modified_at     datetime        default current_timestamp() on update current_timestamp(),        
@@ -69,14 +68,14 @@ insert into pet_diary.activity_type (value, display, sort_order) values
 ("indoor_playing", "Indoor playing", 3),
 ("swimming", "Swimming", 4);
 
-create table pet_diary.health_entry_activity (
+create or replace table pet_diary.health_entry_activity (
     id              bigint          primary key auto_increment,
     health_entry_id bigint          not null,
     activity_type_id    int         not null,
     duration        int             comment 'minutes',
+    start_at        time            comment 'activity start time (HH:MM)',
     notes           varchar(255),    
 
-    constraint FK_activity_health_entry foreign key (health_entry_id) references pet_diary.health_entry (id) on delete cascade,
-    constraint FK_activity_type foreign key (activity_type_id) references pet_diary.activity_type (id)
+    constraint FK_activity_health_entry foreign key (health_entry_id) references pet_diary.health_entry (id) on delete cascade
 )
     comment 'health entry activity master table';

@@ -19,9 +19,7 @@ import com.mooky.pet_diary.global.exception.InUseException;
 import com.mooky.pet_diary.global.security.JwtService;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AuthService {
@@ -46,6 +44,12 @@ public class AuthService {
     public boolean isUsernameAvailable(String username) {
         return !this.userRepository.existsByUsername(username);
     }
+
+    private UserDto generateUserDto(Long userId) {
+        String accessToken = this.jwtService.generateAccessToken(userId);
+        String refreshToken = this.jwtService.generateRefreshToken(userId);
+        return new UserDto(userId, accessToken, refreshToken);
+    }
     
     public UserDto signUpByEmail(UserSignUpReq req) {
         if (this.userRepository.existsByEmail(req.getEmail())) {
@@ -64,9 +68,7 @@ public class AuthService {
                 .build();
 
         User savedUser = this.userRepository.save(userReq);
-        String accessToken = this.jwtService.generateAccessToken(savedUser.getId());
-        String refreshToken = this.jwtService.generateRefreshToken(savedUser.getId());
-        return new UserDto(savedUser.getId(), accessToken, refreshToken);
+        return this.generateUserDto(savedUser.getId());
     }
 
     public UserDto signUpByGoogle(UserSignUpReq req) {
@@ -85,9 +87,7 @@ public class AuthService {
                 .build();
 
         User savedUser = this.userRepository.save(userReq);
-        String accessToken = this.jwtService.generateAccessToken(savedUser.getId());
-        String refreshToken = this.jwtService.generateRefreshToken(savedUser.getId());
-        return new UserDto(savedUser.getId(), accessToken, refreshToken);
+        return this.generateUserDto(savedUser.getId());
     }
 
     
@@ -100,9 +100,7 @@ public class AuthService {
         if (!hasCorrectPw) {
             throw AuthException.invalidLogin("잘못된 비밀번호입니다", req.getEmail(), "로그인 실패");
         }
-        String accessToken = this.jwtService.generateAccessToken(user.getId());
-        String refreshToken = this.jwtService.generateRefreshToken(user.getId());
-        return new UserDto(user.getId(), accessToken, refreshToken);
+        return this.generateUserDto(user.getId());
     }
 
     private String encryptPW(String pw) {
@@ -126,11 +124,13 @@ public class AuthService {
         if (!userOpt.isPresent()) {
             return null;
         } else {
-            Long userId = userOpt.get().getId();
-            String accessToken = this.jwtService.generateAccessToken(userId);
-            String refreshToken = this.jwtService.generateRefreshToken(userId);
-            return new UserDto(userId, accessToken, refreshToken);
+            return this.generateUserDto(userOpt.get().getId());
         }
+    }
+
+    public UserDto refreshAccessToken(String refreshToken) {
+        Long userId = this.jwtService.getUserIdFromToken(refreshToken, false);
+        return this.generateUserDto(userId);
     }
 
 }

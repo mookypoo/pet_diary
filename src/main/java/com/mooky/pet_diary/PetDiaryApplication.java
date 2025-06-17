@@ -14,7 +14,8 @@ public class PetDiaryApplication {
 
 }
 
-// Done: HealthEntryForm - energyLevel, activityType; add weight to profile; 
+// Done: add refreshAccessToken, create HealthEntry, getHealthEntryById
+// change OptionDto, UserWithPetSummaryProjection, PetHealthEntryForm to interface-based projection
 // To do: 
 // - use mapstruct library
 // - refactor BlogController validation

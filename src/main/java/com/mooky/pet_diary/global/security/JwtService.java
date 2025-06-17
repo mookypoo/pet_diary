@@ -66,28 +66,43 @@ public class JwtService {
         return token;
     }
     
-    private Jws<Claims> parseAccessToken(String accessToken) {
+    private Jws<Claims> parseToken(String token, boolean isAccessToken) {
         Jws<Claims> parsed;
         try {
             parsed = Jwts.parser().verifyWith(this.getSigningKey())
                     .build()
-                    .parseSignedClaims(accessToken);
+                    .parseSignedClaims(token);
         } catch (ExpiredJwtException e) {
-            throw AuthException.expiredJwtToken(accessToken);
+            throw AuthException.expiredJwtToken();
         } catch (JwtException e) {
-            throw AuthException.invalidJwtToken(accessToken, e.getMessage());
+            throw AuthException.invalidJwtToken(e.getMessage());
         } catch (Exception e) {
             throw e;
         }
-        
-        if (!parsed.getPayload().getIssuer().equals(this.jwtProperties.getIssuer())) {
-            throw AuthException.invalidJwtToken(accessToken, "invalid issuer");
-        }
+        this.validateToken(parsed.getPayload(), isAccessToken);
         return parsed;
     }
+    
+    /**
+     * checks for issuer and token type
+     */
+    private void validateToken(Claims claims, boolean isAccessToken) {
+        if (!claims.getIssuer().equals(this.jwtProperties.getIssuer())) {
+            throw AuthException.invalidJwtToken("invalid issuer");
+        }
 
-    public Long getUserIdFromAccessToken(String accessToken) {
-        Claims claims = this.parseAccessToken(accessToken).getPayload();
+        if (isAccessToken && !claims.get("type", String.class).equals(this.accessTokenType)) {
+            throw AuthException.invalidJwtToken("please send user's access token, not the refresh token");
+        } else if (!isAccessToken && !claims.get("type", String.class).equals(this.refreshTokenType)) {
+            throw AuthException.invalidJwtToken("please send user's refresh token, not the access token");
+        }
+    }
+
+    /**
+     * validates the token during the process 
+     */
+    public Long getUserIdFromToken(String token, boolean isAccessToken) {
+        Claims claims = this.parseToken(token, isAccessToken).getPayload();
         
         if (claims.containsKey("userId")) {
             return Long.parseLong(claims.get("userId").toString());
@@ -96,5 +111,4 @@ public class JwtService {
 
     }
     
-
 }

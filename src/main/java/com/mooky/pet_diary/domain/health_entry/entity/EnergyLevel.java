@@ -3,18 +3,20 @@ package com.mooky.pet_diary.domain.health_entry.entity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import lombok.RequiredArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
+@Getter
 @Table
-@RequiredArgsConstructor
+@NoArgsConstructor
 @SuppressWarnings("unused")
 public class EnergyLevel {
 
-    @Id private final Integer id;
-    private final String value;
-    private final String display;
-    private final Integer sortOrder;
-    private final Boolean isActive;
+    @Id private Integer id;
+    private String value;
+    private String display;
+    private Integer sortOrder;
+    private Boolean isActive;
 
 }
